@@ -1,0 +1,71 @@
+Instalar y configurar QEMU con Virt-Manager en Debian:
+
+Ver qué procesador tenemos en nuestro pc. 'vmx' intel ó 'svm' amd: Y si tenemos la virtualización activada y cuántos procesadores virtuales hay disponibles en su sistema:
+
+$ grep -Ec 'vmx|svm' /proc/cpuinfo                          (o bien: egrep -c '(vmx|svm)' /proc/cpuinfo)
+
+El numero resultante es, en resumen, el número de núcleos de tu procesador que tienen la capacidad de virtualizar. Si el comando regresa 0 no es posible la virtualización en su CPU o esta desactivada en bios.
+
+$ LC_ALL=C lscpu                                            (comprobar procesadores, arquitectura, hilos, etc)
+$ kvm-ok                                                    (comprobar que soporta virtualización kvm instalando primero el programa cpu-checker)
+
+Instalación de los programas:
+
+$ sudo apt install qemu-system qemu-utils libvirt-clients libvirt-daemon libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager qemu-guest-agent dnsmasq libguestfs-tools libosinfo-bin spice-vdagent -y
+
+$ sudo nano /etc/libvirt/libvirtd.conf
+Quitar “#” en: unix_sock_group = "libvirt" y unix_sock_rw_perms = "0770"      (Linea 85 y 102 aprox.)
+
+Para acceder a sus máquinas virtuales desde el usuario actual en la máquina host, ejecute el comando.
+
+$ sudo usermod -a -G kvm,libvirt,libvirt-qemu $(whoami)    (o bien: $USER)
+$ newgrp libvirt                                           (recargar la membresia del grupo)
+
+Después de la instalación, verifique si el servicio libvirtd se está ejecutando.
+
+$ sudo systemctl status libvirtd.service                   (comprobar: active running)
+$ sudo systemctl enable --now libvirtd.service
+$ sudo systemctl start libvirtd.service
+
+$ sudo nano /etc/libvirt/qemu.conf
+Quitar “#” y añadir tu nombre de usuario y grupo:          (Linea 519 y 523 aprox.)
+user = "your username"                                     (en mi caso ruben)
+group = "your username"                                    (en mi caso ruben)
+$ sudo systemctl restart libvirtd                          (reiniciamos el servicio para que tome los cambios)
+$ sudo virsh net-autostart default                         (hacemos que se conecte a internet al iniciar)
+
+Comandos para inician la red por defecto y se inician automáticamente cuando se reinicia el sistema.
+
+$ sudo virsh net-start default                             (activar red)
+$ sudo virsh net-autostart default                         (activar red por defecto al inicio)
+$ sudo virsh net-autostart --disable default               (desactivar red por defecto al inicio, no le ejecutamos)
+$ sudo virsh net-destroy default                           (detener la red, no le ejecutamos)
+$ sudo reboot
+
+Enumera todas las redes disponibles usando el siguiente comando:
+
+$ sudo virsh net-list --all                                (ver estado de redes, aunque no habrá ninguna aun)
+
+Puedes enumerar sus máquinas virtuales ejecutando el siguiente comando.
+
+$ sudo virsh list --all
+
+El siguiente comando es para mejorar el rendimiento de transferencia de datos de red en tus VM.
+
+$ sudo modprobe vhost_net
+$ echo “vhost_net” | sudo tee -a /etc/modules vhost_net
+$ lsmod | grep vhost
+
+Habilitar la virtualización anidada: Permite ejecutar máquinas virtuales dentro de una VM. Habilita la virtualización anidada kvm_intel / kvm_amd habilitando el módulo del kernel como se muestra.
+
+$ sudo modprobe -r kvm_intel
+$ sudo modprobe kvm_intel nested=1
+$ echo "options kvm_intel nested=1" | sudo tee /etc/modprobe.d/kvm-intel.conf
+Verificar Virtualización anidada: (opcional)
+$ systool -m kvm_intel -v | grep nested
+$ cat /sys/module/kvm_intel/parameters/nested
+Nota: para procesadores AMD sustituir kvm_intel por: kvm_amd en los comandos.
+
+Si no funciona la aceleración 3D con GPU AMD en la maquina virtual, añadir qemu al grupo de video.
+
+$ sudo usermod -aG video qemu
