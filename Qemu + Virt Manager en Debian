@@ -9,9 +9,11 @@ El numero resultante es, en resumen, el número de núcleos de tu procesador que
 $ LC_ALL=C lscpu                                            (comprobar procesadores, arquitectura, hilos, etc)
 $ kvm-ok                                                    (comprobar que soporta virtualización kvm instalando primero el programa cpu-checker)
 
-Instalación de los programas:
+Instalación de los programas necesarios:
 
 $ sudo apt install qemu-system qemu-utils libvirt-clients libvirt-daemon libvirt-daemon-system bridge-utils virtinst libvirt-daemon virt-manager qemu-guest-agent dnsmasq libguestfs-tools libosinfo-bin spice-vdagent -y
+
+Ajustes en archivo de configuración de libvirtd:
 
 $ sudo nano /etc/libvirt/libvirtd.conf
 Quitar “#” en: unix_sock_group = "libvirt" y unix_sock_rw_perms = "0770"      (Linea 85 y 102 aprox.)
@@ -26,6 +28,8 @@ Después de la instalación, verifique si el servicio libvirtd se está ejecuta
 $ sudo systemctl status libvirtd.service                   (comprobar: active running)
 $ sudo systemctl enable --now libvirtd.service
 $ sudo systemctl start libvirtd.service
+
+Ajustes en archivo de configuración de qemu:
 
 $ sudo nano /etc/libvirt/qemu.conf
 Quitar “#” y añadir tu nombre de usuario y grupo:          (Linea 519 y 523 aprox.)
@@ -66,6 +70,6 @@ $ systool -m kvm_intel -v | grep nested
 $ cat /sys/module/kvm_intel/parameters/nested
 Nota: para procesadores AMD sustituir kvm_intel por: kvm_amd en los comandos.
 
-Si no funciona la aceleración 3D con GPU AMD en la maquina virtual, añadir qemu al grupo de video.
+Si no funciona la aceleración 3D con GPU AMD en la maquina virtual, a veces se resuelve tras añadir qemu al grupo de video.
 
 $ sudo usermod -aG video qemu
