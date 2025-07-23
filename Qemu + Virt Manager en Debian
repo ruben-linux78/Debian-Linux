@@ -11,7 +11,7 @@ $ kvm-ok                                                    (comprobar que sopor
 
 Instalación de los programas necesarios:
 
-$ sudo apt install qemu-system qemu-utils qemu-guest-agent libvirt-clients libvirt-daemon libvirt-daemon-system bridge-utils virtinst virt-manager dnsmasq libguestfs-tools libosinfo-bin spice-vdagent -y
+$ sudo apt install qemu-system qemu-utils qemu-guest-agent libvirt-clients libvirt-daemon libvirt-daemon-system bridge-utils virtinst virt-manager dnsmasq libguestfs-tools libosinfo-bin sysfsutils spice-vdagent -y
 
 Ajustes en archivo de configuración de libvirtd:
 
@@ -32,7 +32,7 @@ $ sudo systemctl start libvirtd.service
 Ajustes en archivo de configuración de qemu:
 
 $ sudo nano /etc/libvirt/qemu.conf
-Quitar “#” y añadir tu nombre de usuario y grupo:          (Linea 519 y 523 aprox.)
+Quitar “#” y añadir tu nombre de usuario y grupo:          (Linea 544 y 548 aprox.)
 user = "your username"                                     (en mi caso ruben)
 group = "your username"                                    (en mi caso ruben)
 $ sudo systemctl restart libvirtd                          (reiniciamos el servicio para que tome los cambios)
