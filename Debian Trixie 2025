@@ -1,0 +1,56 @@
+-Debian Trixie 2025:
+
+-Añadir nuestro usuario al grupo sudo: (En caso de considerarlo necesario)
+$ su –
+$ sudo usermod -aG sudo ruben
+$ sudo nano /etc/sudoers
+ruben ALL=(ALL:ALL) ALL
+
+-Repositorios actualizados para Debian Trixie: Copiar contenido en: /etc/apt/sources.list
+$ sudo nano /etc/apt/sources.list
+
+deb http://deb.debian.org/debian trixie main contrib non-free non-free-firmware
+deb-src http://deb.debian.org/debian trixie main contrib non-free non-free-firmware
+deb http://security.debian.org/debian-security trixie-security main contrib non-free non-free-firmware
+deb-src http://security.debian.org/debian-security trixie-security main contrib non-free non-free-firmware
+deb http://deb.debian.org/debian trixie-updates main contrib non-free non-free-firmware
+deb-src http://deb.debian.org/debian trixie-updates main contrib non-free non-free-firmware
+deb http://deb.debian.org/debian trixie-backports main contrib non-free non-free-firmware
+deb-src http://deb.debian.org/debian trixie-backports main contrib non-free non-free-firmware
+
+-Instalar paquete desde backports:
+$ sudo apt install -t trixie-backports package-name
+
+-Comando para convertir structuras antiguas al formato actual:
+$ sudo apt modernize-sources
+
+-Comandos básicos para distros basadas en Debian. Basadas en APT, DPKG y UPDATE:
+apt
+    1. apt update: Actualizar las listas de paquetes de los repositorios.
+    2. apt upgrade: Actualizar los paquetes desde los repositorios de forma segura.
+    3. apt full-upgrade: Actualizar los paquetes desde los repositorios de forma total.
+    4. apt dist-upgrade: Actualizar la versión actual del SO a la siguiente disponible.
+    5. apt install -f: Solventar problemas de instalación de paquetes y dependencias.
+    6. apt install --fix-broken: Solventar problemas relacionados con paquetes rotos.
+    7. apt remove nom_paq: Eliminar paquetes. También, puede usarse sin el nombre.
+    8. apt autoremove --purge: Eliminar automáticamente todos los paquetes sin utilizar.
+    9. apt purge nom_paq: Eliminar paquetes completamente. Puede usarse sin nombre.
+    10. apt autopurge: Eliminar automática y completamente todos los paquetes sin utilizar.
+    11. apt clean: Eliminar todos los paquetes «.deb», descargados en el directorio del almacén de paquetes.
+    12. apt autoclean: Elimina todos los paquetes del almacén de paquetes, que ya no se pueden descargar.
+    13. apt install nom_paq_repo: Instalar un determinado paquete del repositorio por su nombre.
+    14. apt install /dir_paq/nom_paq.deb: Instalar un paquete descargado por su nombre.
+    15. apt list *nom_paq*: Listar paquetes por coincidencias de patrón de búsqueda.
+    16. apt list --upgradeable: Listar los paquetes disponibles para su actualización.
+    17. apt show nom_paq: Mostrar los datos e información de un paquete del repositorio.
+    18. apt search nom_paq: Mostrar los paquetes existentes que coincidan con el nombre.
+    19. apt edit-sources: Abrir, en modo de edición, el archivo de orígenes de software (repositorios) principal.
+    20. apt install nano -s: Simula instalación de nano, podemos ver dependencias.
+dpkg
+    1. dpkg -i /dir_paq/nom_paq.deb: Instalar un paquete descargado por su nombre.
+    2. dpkg --configure -a: Terminar de configurar todos los paquetes desempaquetados e interrumpidos.
+update
+    1. update grub: Actualizar el GRUB (Gestor de arranque multiple v1) instalado en el disco/partición.
+    2. update grub2: Actualizar el GRUB (Gestor de arranque multiple v2) instalado en el disco/partición.
+    3. update-menus: Generar y actualizar automáticamente el contenido del Sistema de Menú.
+    4. update-alternatives --all: Gestionar toda la información de los enlaces simbólicos del SO.
