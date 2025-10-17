@@ -15,8 +15,8 @@ $ sudo apt install qemu-system qemu-utils qemu-guest-agent libvirt-clients libvi
 
 Ajustes en archivo de configuración de libvirtd:
 
-$ sudo nano /etc/libvirt/libvirtd.conf
-Quitar “#” en: unix_sock_group = "libvirt" y unix_sock_rw_perms = "0770"      (Linea 85 y 102 aprox.)
+$ sudo nano -l /etc/libvirt/libvirtd.conf
+Quitar “#” en: unix_sock_group = "libvirt" y unix_sock_rw_perms = "0770"      (Lineas 85 y 102 aprox.)
 
 Para acceder a sus máquinas virtuales desde el usuario actual en la máquina host, ejecute el comando.
 
@@ -31,10 +31,10 @@ $ sudo systemctl start libvirtd.service
 
 Ajustes en archivo de configuración de qemu:
 
-$ sudo nano /etc/libvirt/qemu.conf
+$ sudo nano -l /etc/libvirt/qemu.conf
 Quitar “#” y añadir tu nombre de usuario y grupo:          (Linea 544 y 548 aprox.)
 user = "your username"                                     (en mi caso ruben)
-group = "your username"                                    (en mi caso ruben)
+group = "libvirt"                                          (en mi caso libvirt o ruben)
 $ sudo systemctl restart libvirtd                          (reiniciamos el servicio para que tome los cambios)
 $ sudo virsh net-autostart default                         (hacemos que se conecte a internet al iniciar)
 
