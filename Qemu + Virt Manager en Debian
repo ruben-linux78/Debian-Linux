@@ -16,7 +16,7 @@ $ sudo apt install qemu-system qemu-utils qemu-guest-agent libvirt-clients libvi
 Ajustes en archivo de configuración de libvirtd:
 
 $ sudo nano -l /etc/libvirt/libvirtd.conf
-Quitar “#” en: unix_sock_group = "libvirt" y unix_sock_rw_perms = "0770"      (Lineas 85 y 102 aprox.)
+Quitar “#” en: unix_sock_group = "libvirt" y unix_sock_rw_perms = "0770"      (Lineas 85 y 108 aprox.)
 
 Para acceder a sus máquinas virtuales desde el usuario actual en la máquina host, ejecute el comando.
 
