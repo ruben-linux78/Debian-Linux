@@ -1,0 +1,40 @@
+# Instalar bluetooth en debian 13 mas blueman.
+# Actualiza las listas de paquetes e instalar programas:
+
+sudo apt update
+sudo apt install bluez bluez-cups bluez-firmware bluez-tools blueman
+
+# Si usas el servidor de sonido PipeWire instala pipewire-pulse para una mejor compatibilidad con PulseAudio:
+
+sudo apt install pipewire-pulse
+
+# Habilita el servicio de Bluetooth para que se inicie automáticamente al arrancar:
+
+sudo systemctl enable bluetooth.service
+
+# Inicia el servicio si no está en ejecución:
+
+sudo systemctl start bluetooth.service
+
+# Puedes verificar el estado del servicio con:
+
+sudo systemctl status bluetooth.service
+
+# Busca la sección de Bluetooth en la configuración de tu entorno de escritorio para conectarte.
+
+# Conectar dispositivos sin la interfaz grafica:
+# Activa el modo de escaneo:
+
+bluetoothctl scan on
+
+# Una vez que aparezca el dispositivo, puedes emparejarlo y conectarte. Por ejemplo:
+
+pair <dirección_MAC_del_dispositivo>
+connect <dirección_MAC_del_dispositivo>
+
+# La dirección MAC se mostrará en la lista cuando ejecutes scan on
+
+# bluez: es la pila principal de protocolos Bluetooth.
+# bluez-cups: para soporte de impresión Bluetooth (opcional).
+# bluez-firmware: contiene el firmware necesario para varios adaptadores Bluetooth.
+# bluez-tools: proporciona herramientas de línea de comandos para la gestión de Bluetooth.
